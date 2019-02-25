@@ -1,17 +1,17 @@
 /// helpers
 /// @{
 function embed(fn) {
-    const script = document.createElement("script");
-    script.text = `(${fn.toString()})();`;
-    document.documentElement.appendChild(script);
+    const script = document.createElement("script")
+    script.text = `(${fn.toString()})();`
+    document.documentElement.appendChild(script)
 }
 
 String.prototype.toCharArray = function() {
-    return this.split('');
+    return this.split('')
 }
 
 Array.prototype.toString = function() {
-    return this.join('');
+    return this.join('')
 }
 
 function _min(d0, d1, d2, bx, ay) {
@@ -111,7 +111,7 @@ function levenshtein(a, b) {
     }
 
     return dd;
-};
+}
 
 function similarity(str1, str2) {
     let distance = levenshtein(str1, str2)
@@ -140,7 +140,7 @@ function runEmbedded() {
                 method: method,
                 url: url
             }
-        });
+        })
         window.dispatchEvent(event)
         this._url = url
         return open.apply(this, arguments)
@@ -150,36 +150,36 @@ function runEmbedded() {
 
     let onReadyStateChangeReplacement = function () {  
         if(this.readyState != XMLHttpRequest.DONE)
-            return;
+            return
 
         var event = new CustomEvent("angularjs_xhr_done", {
             detail: {
                 status: this.status,
                 url: this.responseURL
             }
-        });
+        })
         window.dispatchEvent(event)
         
         if (this._onreadystatechange) {
-            return this._onreadystatechange.apply(this, arguments);
+            return this._onreadystatechange.apply(this, arguments)
         }
     }
 
     let send = window.XMLHttpRequest.prototype.send
     let sendReplacement = function(data) {  
         if (this.onreadystatechange) {
-          this._onreadystatechange = this.onreadystatechange;
+          this._onreadystatechange = this.onreadystatechange
         }
         
         var event = new CustomEvent("angularjs_xhr_send", {
             detail: {
                 data: data
             }
-        });
+        })
         window.dispatchEvent(event)
         
-        this.onreadystatechange = onReadyStateChangeReplacement;
-        return send.apply(this, arguments);
+        this.onreadystatechange = onReadyStateChangeReplacement
+        return send.apply(this, arguments)
     }
     window.XMLHttpRequest.prototype.send = sendReplacement
 }
@@ -219,7 +219,7 @@ class AutoFillPanel {
     }
 
     get panelElement() {
-        return this._panel;
+        return this._panel
     }
 
     onload() {
@@ -267,7 +267,7 @@ class AutoFillPanel {
             // search service in item list
             for (let item of sercicesRows) {
                 if (!isSimilar(item.innerText, service.name, 0.58))
-                    continue;
+                    continue
                 
                 let inputs = item.nextElementSibling.querySelectorAll('input.form-control')
                 inputs[2].value = service.count
@@ -307,7 +307,6 @@ class AutoFillPanel {
 
         searchInput.dispatchEvent(new KeyboardEvent("keydown", {keyCode: 13}))*/
         setTimeout(()=>{
-            let self = this;
             searchInput.dispatchEvent(new KeyboardEvent("keydown", {keyCode: 13}))
         }, 3000)
     }
@@ -350,7 +349,7 @@ class AutoFillPanel {
             this._completedServicesData.length = 0
             let completedServicesList = this._completedServicesList
             while (completedServicesList.firstChild) {
-                completedServicesList.removeChild(completedServicesList.firstChild);
+                completedServicesList.removeChild(completedServicesList.firstChild)
             }
         })
         sidePanel.appendChild(removeAllBtn)
@@ -366,16 +365,16 @@ class AutoFillPanel {
             let i = this._completedServicesData.length
             while (i--) {
                 if (this._completedServicesData[i].used === true) { 
-                    this._completedServicesData.splice(i, 1);
+                    this._completedServicesData.splice(i, 1)
                 } 
             }
 
             // remove elements from DOM
-            let completedServicesList = this._completedServicesList.children;
+            let completedServicesList = this._completedServicesList.children
             i = completedServicesList.length
             while (i--) {
                 if (completedServicesList[i].classList.contains("used")) {
-                    this._completedServicesList.removeChild(completedServicesList[i]);
+                    this._completedServicesList.removeChild(completedServicesList[i])
                 }
             }
         })
@@ -390,7 +389,7 @@ class AutoFillPanel {
         addFilesBtnInput.setAttribute("multiple", "")
         addFilesBtnInput.addEventListener("change", (e) => {
             for(let file of e.target.files) {
-                this._parseFile(file);
+                this._parseFile(file)
             }
         })
         addFilesBtn.appendChild(addFilesBtnInput)
@@ -404,7 +403,7 @@ class AutoFillPanel {
 
         panel.appendChild(sidePanel)
 
-        return panel;
+        return panel
     }
 
     _parseFile(file) {
@@ -445,7 +444,7 @@ class AutoFillPanel {
             completeService.house = completeService.house.trim()
             completeService.date = completeService.date.trim()
 
-            let listItem = this._buildCompletedServicesListItem(completeService);
+            let listItem = this._buildCompletedServicesListItem(completeService)
             this._completedServicesList.appendChild(listItem)
         }
     }
@@ -488,7 +487,7 @@ class AutoFillPanel {
             listItem.classList.add("used")
         }
 
-        return listItem;
+        return listItem
     }
 
     _setXnrDone(requestsMap) {
@@ -497,25 +496,25 @@ class AutoFillPanel {
             aElement.href = url
 
             if (requestsMap.has(aElement.pathname)) {
-                requestsMap.get(aElement.pathname)();
-                //requestsMap.set(aElement.pathname,true);
+                requestsMap.get(aElement.pathname)()
+                //requestsMap.set(aElement.pathname,true)
             }
         }
     }
 
     _resetXnrDone() {
-        this.xnrDone = undefined;
+        this.xnrDone = undefined
     }
 
     _isRequestsComplete(requestsMap) {
         for(let value of requestsMap.values()) {
             if (value === true)
-                continue;
+                continue
             
-            return false;
+            return false
         }
 
-        return true;
+        return true
     }
 
     _isValidForm(completedServiceObject) {
@@ -572,7 +571,7 @@ class AutoFillPanel {
 
     _searchFormByLabelText(labelText) {
         let labels = document.querySelectorAll("div.form-group > label.control-label")
-        let targetLabel = null;
+        let targetLabel = null
         for (let label of labels) {
             if (!label.innerText.toLowerCase().includes(labelText))
                 continue
@@ -598,7 +597,7 @@ function main() {
         let window = loadEvent.currentTarget
         window.addEventListener("angularjs_xhr_done", function(e) {
             if (e.detail.status !== 200)
-                return;
+                return
 
             console.log(e.detail.url)
             if (autoFillPanel.xnrDone != null) {
@@ -614,4 +613,4 @@ function main() {
     })
 }
 
-main();
+main()
