@@ -1,0 +1,145 @@
+#gosuslugi-autofill {
+    position: fixed;
+    z-index: 999;
+    width: 300px;
+    top: 0px;
+    right: 0px;
+    background-color: rgb(1, 119, 194);
+    padding: 0.4em;
+    transition: right 1s;
+}
+
+#gosuslugi-autofill.guaf-hidden {
+    right: -301px;
+}
+
+.guaf-btn {
+    position: relative;
+    float: left;
+    color: #000;
+    background: #68B9DA;
+    width: 100%;
+    border: 0;
+    cursor: pointer;
+    text-align: center;
+    margin: 0;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+    font-size: 9pt;
+    line-height: 2;
+    text-transform: uppercase;
+    border-radius: 0.3em;
+}
+.guaf-btn:hover {
+    background-color: #5E99B1;
+}
+    .guaf-btn > input {
+        position: absolute;
+        cursor: pointer;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .guaf-btn > p {
+        margin: 0;
+        padding: 0.5em 0;
+        font-size: inherit;
+        line-height: inherit;
+    }
+
+.guaf-btn-tool {
+    line-height: 1;
+    font-size: 8pt;
+    width: 50%;
+}
+
+.guaf-completed-services {
+    background-color: #fff;
+    width: 100%;
+    height: 20em;
+    min-height: 15em;
+    float: left;
+    overflow: auto;
+    border-radius: 0.3em;
+    resize: vertical;
+}
+    .guaf-completed-services--item {
+        float: left;
+        width: 100%;
+        font-size: 10pt;
+        min-height: 1.6em;
+        line-height: 1.6em;
+    }
+    .guaf-completed-services--item.used {
+        background-color: #ddd;
+    }
+    .guaf-completed-services--item > p {
+        float: left;
+        margin:0;
+        padding-left: 0.5em;
+        line-height: inherit;
+        font-size: inherit;
+        max-width: 90%;
+    }
+    .guaf-completed-services--item > p:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    } 
+
+.guaf-completed-services--item--remove-btn {
+    float: right;
+    height: 1.6em;
+    padding: 3px;
+    visibility: hidden;
+}
+    .guaf-completed-services--item:hover > .guaf-completed-services--item--remove-btn {
+        visibility: visible;
+    }
+    .guaf-completed-services--item--remove-btn:hover {
+        cursor: pointer;
+    }
+    .guaf-completed-services--item--remove-btn > img {
+        height: 100%;
+        float: left;
+    }
+
+.guaf-sidepanel {
+    position: absolute;
+    z-index: -1;
+    left: -2.5em;
+    top: 0;
+    width: 3em;
+    background-color: inherit;
+    padding: 0.9em 0.6em;
+    padding-right: 1em;
+}
+    .guaf-sidepanel--btn {
+        cursor: pointer;
+        padding-top: 0.9em;
+    }
+        .guaf-sidepanel--btn > img {
+            max-width: 100%;
+        }
+        .guaf-sidepanel--btn > input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .guaf-sidepanel--btn > input:hover {
+            cursor: pointer;
+        }
+
+    .guaf-sidepanel--btn-hide {
+        padding: 0;
+        padding-bottom: 1.5em;
+    }
+        .guaf-sidepanel--btn-hide > img {
+            transform: rotateY(0deg) translate(0.1em,0);
+            transition: 1.6s;
+            transform-style: preserve-3d;
+        }
+        .guaf-hidden .guaf-sidepanel--btn-hide > img {
+            transform: rotateY(180deg) translate(0,0);
+        }
