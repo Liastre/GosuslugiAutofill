@@ -300,37 +300,45 @@ class AutoFillPanel {
         }
     }
 
-    _fillDropdownField(selector, fillData, requestsOnSelect) {
-        this._setXnrDone(requestsOnSelect)
-        this._selectDropdownElementAsync(fillData, selector)
-
-        let promises = []
+    _selectDropdownElementAsync(selector, dataToSearch, requestsOnChange, requestsOnSelect) {
+        // promises arrays
+        let onChangePromises = []
+        for (let key of requestsOnChange.keys()) {
+            onChangePromises.push(new Promise(resolve => {
+                requestsOnChange.set(key, resolve)
+            }))
+        }
+        let onSelectPromises = []
         for (let key of requestsOnSelect.keys()) {
-            promises.push(new Promise(resolve => {
+            onSelectPromises.push(new Promise(resolve => {
                 requestsOnSelect.set(key, resolve)
             }))
         }
 
-        return Promise.all(promises).then(() => { this._resetXnrDone() })
-    }
+        // set current callback for xnr
+        this._setXnrDone(requestsOnChange)
 
-    _selectDropdownElementAsync(text, selector) {
         // select element
         let dropdownMenu = document.querySelectorAll(selector)[0]
         dropdownMenu.dispatchEvent(new Event("mousedown"))
 
         // insert data
         let searchInput = document.activeElement
-        searchInput.value = text
+        searchInput.value = dataToSearch
         searchInput.dispatchEvent(new Event("input"))
 
-        /*while(!this._isRequestsComplete(this._xhrOnRegionChanged)) {
-        }
-
-        searchInput.dispatchEvent(new KeyboardEvent("keydown", {keyCode: 13}))*/
-        setTimeout(()=>{
-            searchInput.dispatchEvent(new KeyboardEvent("keydown", {keyCode: 13}))
-        }, 3000)
+        return Promise.all(onChangePromises)
+            .then(() => {
+                return sleep(10)
+            }) 
+            .then(() => {
+                this._resetXnrDone(requestsOnSelect)
+                searchInput.dispatchEvent(new KeyboardEvent("keydown", {keyCode: 13}))
+                return Promise.all(onSelectPromises)
+            })
+            .then(() => {
+                this._resetXnrDone()
+            })
     }
 
     _buildSidePanel() {
