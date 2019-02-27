@@ -506,8 +506,12 @@ class AutoFillPanel {
         }
     }
 
-    _resetXnrDone() {
-        this.xnrDone = undefined
+    _resetXnrDone(requestsMap) {
+        if (requestsMap) {
+            this._setXnrDone(requestsMap)
+        } else {
+            this.xnrDone = undefined
+        }
     }
 
     _isRequestsComplete(requestsMap) {
