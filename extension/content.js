@@ -201,21 +201,39 @@ class AutoFillPanel {
 
         // setup requests
         this._xhrOnRegionChanged = new Map([
-            ["/homemanagement/api/rest/services/houses/fias/additional-area-streets", false],
-            ["/homemanagement/api/rest/services/houses/fias/additional-areas", false],
+        ])
+        this._xhrOnRegionSelected = new Map([
             ["/homemanagement/api/rest/services/houses/fias/settlements", false],
-            ["/homemanagement/api/rest/services/houses/fias/house/numbers/full", false],
             ["/homemanagement/api/rest/services/houses/fias/inner-city-areas", false],
             ["/homemanagement/api/rest/services/houses/fias/planning-structure-elements", false],
+            ["/homemanagement/api/rest/services/houses/fias/additional-areas", false],
+            ["/homemanagement/api/rest/services/houses/fias/additional-area-streets", false],
+            ["/homemanagement/api/rest/services/houses/fias/streets", false],
+            ["/homemanagement/api/rest/services/houses/fias/house/numbers/full", false]
+        ])
+
+        this._xhrOnCityChanged = new Map([
+            ["/homemanagement/api/rest/services/houses/fias/cities", false]
+        ])
+        this._xhrOnCitySelected = new Map([
+            ["/homemanagement/api/rest/services/houses/fias/settlements", false],
+            ["/homemanagement/api/rest/services/houses/fias/inner-city-areas", false],
+            ["/homemanagement/api/rest/services/houses/fias/planning-structure-elements", false],
+            ["/homemanagement/api/rest/services/houses/fias/additional-areas", false],
+            ["/homemanagement/api/rest/services/houses/fias/additional-area-streets", false],
+            ["/homemanagement/api/rest/services/houses/fias/streets", false],
+            ["/homemanagement/api/rest/services/houses/fias/house/numbers/full", false]
+        ])
+
+        this._xhrOnStreetChanged = new Map([
             ["/homemanagement/api/rest/services/houses/fias/streets", false]
         ])
-        this._xhrOnCityChanged = this._xhrOnRegionChanged
-        this._xhrOnStreetChanged = new Map([
-            ["/homemanagement/api/rest/services/houses/fias/streets", false],
+        this._xhrOnStreetSelected = new Map([
             ["/homemanagement/api/rest/services/houses/fias/additional-areas", false],
             ["/homemanagement/api/rest/services/houses/fias/additional-area-streets", false],
             ["/homemanagement/api/rest/services/houses/fias/house/numbers/full", false]
         ])
+
         this._xhrOnHouseChanged = new Map([
             ["/workplanning/api/rest/services/find/house/by/fias", false],
             ["/workplanning/api/rest/services/search/reportingperiods", false]
