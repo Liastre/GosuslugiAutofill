@@ -131,6 +131,10 @@ function isSimilar(str1, str2, succesPercentage) {
     }
 }
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 function runEmbedded() {
     // replace for open
     let open = window.XMLHttpRequest.prototype.open
