@@ -235,8 +235,9 @@ class AutoFillPanel {
         ])
 
         this._xhrOnHouseChanged = new Map([
-            ["/workplanning/api/rest/services/find/house/by/fias", false],
-            ["/workplanning/api/rest/services/search/reportingperiods", false]
+            ["/homemanagement/api/rest/services/houses/fias/house/numbers/full", false]
+        ])
+        this._xhrOnHouseSelected = new Map([
         ])
     }
 
