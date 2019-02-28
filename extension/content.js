@@ -301,7 +301,7 @@ class AutoFillPanel {
         }
     }
 
-    _selectDropdownElementAsync(selector, dataToSearch, requestsOnChange, requestsOnSelect) {
+    async _selectDropdownElementAsync(selector, dataToSearch, requestsOnChange, requestsOnSelect) {
         // promises arrays
         let onChangePromises = []
         for (let key of requestsOnChange.keys()) {
@@ -316,30 +316,30 @@ class AutoFillPanel {
             }))
         }
 
-        // set current callback for xnr
-        this._setXnrDone(requestsOnChange)
-
         // select element
         let dropdownMenu = document.querySelectorAll(selector)[0]
+        let parentContainer = dropdownMenu.parentElement
+        // wait till container locked
+        while(parentContainer.classList.contains("select2-container-disabled")) {
+            await sleep(1)
+        }
         dropdownMenu.dispatchEvent(new Event("mousedown"))
+
+        // set current callback for xnr
+        this._setXnrDone(requestsOnChange)
 
         // insert data
         let searchInput = document.activeElement
         searchInput.value = dataToSearch
         searchInput.dispatchEvent(new Event("input"))
+        await Promise.all(onChangePromises)
 
-        return Promise.all(onChangePromises)
-            .then(() => {
-                return sleep(10)
-            }) 
-            .then(() => {
-                this._resetXnrDone(requestsOnSelect)
-                searchInput.dispatchEvent(new KeyboardEvent("keydown", {keyCode: 13}))
-                return Promise.all(onSelectPromises)
-            })
-            .then(() => {
-                this._resetXnrDone()
-            })
+        // select data
+        await sleep(1)
+        this._resetXnrDone(requestsOnSelect)
+        searchInput.dispatchEvent(new KeyboardEvent("keydown", {keyCode: 13}))
+        await Promise.all(onSelectPromises)
+        this._resetXnrDone()
     }
 
     _buildSidePanel() {
