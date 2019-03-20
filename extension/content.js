@@ -474,6 +474,8 @@ class AutoFillPanel {
             completeService.street = completeService.street.trim()
             completeService.house = completeService.house.trim()
             completeService.date = completeService.date.trim()
+            if (completeService.streetType)
+                completeService.streetType = completeService.streetType.trim().toLowerCase()
 
             let listItem = this._buildCompletedServicesListItem(completeService)
             this._completedServicesList.appendChild(listItem)
@@ -487,7 +489,11 @@ class AutoFillPanel {
 
         // list item name
         let listItemName = document.createElement('p')
-        listItemName.innerText = completedServiceObject.street + ", " + completedServiceObject.house + " от " + completedServiceObject.date
+        if(completedServiceObject.streetType)
+            listItemName.innerText += completedServiceObject.streetType
+        listItemName.innerText += " " + completedServiceObject.street
+        listItemName.innerText += ", " + completedServiceObject.house
+        listItemName.innerText += " от " + completedServiceObject.date
         listItemName.addEventListener("click", ()=>{
             if (!this._isValidForm(completedServiceObject))
                 return
