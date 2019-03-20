@@ -529,6 +529,7 @@ class AutoFillPanel {
 
     _setXnrDone(requestsMap) {
         this.xnrDone = function(url) {
+            // parse url via a element to get pathname
             let aElement = document.createElement('a')
             aElement.href = url
 
@@ -558,6 +559,10 @@ class AutoFillPanel {
         return true
     }
 
+    /**
+     * Check selected completed work with form filling
+     * @param {object} completedServiceObject 
+     */
     _isValidForm(completedServiceObject) {
         let alertMessage = "Вводимые данные не совпадают, проверьте:"
         let isValid = true
@@ -591,7 +596,10 @@ class AutoFillPanel {
         return isValid
     }
 
-    // forms search
+    /**
+     * Forms search
+     */
+    /// @{
     _searchFormStreet() {
         let target = null
         let streetChosen = document.getElementById("s2id_street")
@@ -626,6 +634,7 @@ class AutoFillPanel {
         let target = targetLabel.nextElementSibling.querySelectorAll(".select2-chosen")[0]
         return target
     }
+    /// @}
 }
 
 function main() {
