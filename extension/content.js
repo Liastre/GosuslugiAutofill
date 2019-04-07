@@ -278,8 +278,6 @@ class AutoFillPanel {
     }
 
     _fillCompletedWork(completedWork) {
-        //this._fillServicesTable("#efHcsprfFrForm table.table.table-entity", completedWork.services)
-
         let regionSelector = '#s2id_region > .select2-choice'
         this._selectDropdownElementWithSearchAsync(regionSelector, completedWork.area, this._xhrOnRegionChanged, this._xhrOnRegionSelected)
         .then(() => {
@@ -306,6 +304,11 @@ class AutoFillPanel {
             console.log("period chosen")
             let searchBtnSelector = ".form-horizontal div.col-xs-8.text-right.ng-scope > button.btn.btn-prime"
             return this._submitFormSearch(searchBtnSelector, this._xhrOnFormSearch)
+        })
+        .then(() => {
+            console.log("search submitted")
+            let tableSelector = "#efHcsprfFrForm table.table.table-entity"
+            this._fillServicesTable(tableSelector, completedWork.services)
         })
     }
 
