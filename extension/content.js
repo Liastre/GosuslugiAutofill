@@ -207,6 +207,7 @@ class AutoFillPanel {
         this._panel = this._buildSidePanel()
 
         // setup requests
+        // each request contains API url and complete flag
         this._xhrOnRegionChanged = new Map([
         ])
         this._xhrOnRegionSelected = new Map([
@@ -248,6 +249,10 @@ class AutoFillPanel {
             ["/workplanning/api/rest/services/find/house/by/fias", false],
             ["/workplanning/api/rest/services/search/reportingperiods", false]
         ])
+
+        this._xhrOnFormSearch = new Map([
+            ["/workplanning/api/rest/services/search/fixedworks", false],
+            ["/workplanning/api/rest/services/search/providers/notactual", false]
         ])
     }
 
@@ -296,6 +301,11 @@ class AutoFillPanel {
             console.log("house chosen")
             let dateSelector = '.form-horizontal .select2-container.form-control.form-base__form-control.ng-untouched.ng-isolate-scope > .select2-choice'
             return this._selectDropdownElementAsync(dateSelector, completedWork.date)
+        })
+        .then(() => {
+            console.log("period chosen")
+            let searchBtnSelector = ".form-horizontal div.col-xs-8.text-right.ng-scope > button.btn.btn-prime"
+            return this._submitFormSearch(searchBtnSelector, this._xhrOnFormSearch)
         })
     }
 
@@ -403,6 +413,24 @@ class AutoFillPanel {
         selectedEl = document.evaluate(xpath, dropdownList, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
         selectedEl.classList.add("select2-highlighted")
         inputEl.dispatchEvent(new KeyboardEvent("keydown", {keyCode: 13}))
+    }
+
+    async _submitFormSearch(selector, requestsOnSubmit) {
+        // promises arrays
+        let onSubmitPromises = []
+        if (requestsOnSubmit) {
+            for (let key of requestsOnSubmit.keys()) {
+                onSubmitPromises.push(new Promise(resolve => {
+                    requestsOnSubmit.set(key, resolve)
+                }))
+            }
+        }
+
+        let searchBtn = document.querySelector(selector)
+        this._setXnrDone(requestsOnSubmit)
+        searchBtn.click()
+        await Promise.all(onSubmitPromises)
+        this._resetXnrDone()
     }
 
     _buildSidePanel() {
