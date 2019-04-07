@@ -318,6 +318,15 @@ class AutoFillPanel {
     }
 
     async _selectDropdownElementWithSearchAsync(selector, dataToSearch, requestsOnChange, requestsOnSelect) {
+        // select element
+        let dropdownMenu = document.querySelector(selector)
+        let parentContainer = dropdownMenu.parentElement
+        if (!dropdownMenu.classList.contains("select2-default")) {
+            let dropdownMenuChosen = dropdownMenu.querySelector("span.select2-chosen")
+            let isSameSelected = dropdownMenuChosen.innerText.includes(dataToSearch)
+            if (isSameSelected) return
+        }
+        
         // promises arrays
         let onChangePromises = []
         for (let key of requestsOnChange.keys()) {
@@ -332,9 +341,6 @@ class AutoFillPanel {
             }))
         }
 
-        // select element
-        let dropdownMenu = document.querySelectorAll(selector)[0]
-        let parentContainer = dropdownMenu.parentElement
         // wait till container locked
         while(parentContainer.classList.contains("select2-container-disabled")) {
             await sleep(1)
