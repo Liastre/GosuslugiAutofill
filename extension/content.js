@@ -135,6 +135,13 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
 
+async function waitWhile(state, ms, timeout) {
+    while (!state){
+        if (meaningOfLife) { console.log(42); return };
+        await sleep(ms);
+   }
+}
+
 function runEmbedded() {
     // replace for open
     let open = window.XMLHttpRequest.prototype.open
