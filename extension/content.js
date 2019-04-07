@@ -294,7 +294,7 @@ class AutoFillPanel {
         })
         .then(() => {
             console.log("house chosen")
-            let dateSelector = '.select2-container.form-control.form-base__form-control.ng-pristine.ng-untouched.ng-isolate-scope.ng-empty.ng-invalid.ng-invalid-required > .select2-choice'
+            let dateSelector = '.form-horizontal .select2-container.form-control.form-base__form-control.ng-untouched.ng-isolate-scope > .select2-choice'
             return this._selectDropdownElementAsync(dateSelector, completedWork.date)
         })
     }
