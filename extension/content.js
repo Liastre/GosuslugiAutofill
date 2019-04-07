@@ -585,6 +585,8 @@ class AutoFillPanel {
     }
 
     _setXnrDone(requestsMap) {
+        if (!requestsMap) return;
+
         this.xnrDone = function(url) {
             // parse url via a element to get pathname
             let aElement = document.createElement('a')
