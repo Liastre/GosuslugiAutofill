@@ -238,6 +238,9 @@ class AutoFillPanel {
             ["/homemanagement/api/rest/services/houses/fias/house/numbers/full", false]
         ])
         this._xhrOnHouseSelected = new Map([
+            ["/workplanning/api/rest/services/find/house/by/fias", false],
+            ["/workplanning/api/rest/services/search/reportingperiods", false]
+        ])
         ])
     }
 
@@ -263,24 +266,30 @@ class AutoFillPanel {
     }
 
     _fillCompletedWork(completedWork) {
-        this._fillServicesTable("#efHcsprfFrForm table.table.table-entity", completedWork.services)
+        //this._fillServicesTable("#efHcsprfFrForm table.table.table-entity", completedWork.services)
 
-        /*this._fillDropdownField("#s2id_region > .select2-choice", completedWork.area, this._xhrOnRegionChanged)
+        let regionSelector = '#s2id_region > .select2-choice'
+        this._selectDropdownElementWithSearchAsync(regionSelector, completedWork.area, this._xhrOnRegionChanged, this._xhrOnRegionSelected)
         .then(() => {
             console.log("region chosen")
-            return this._fillDropdownField("#s2id_city > .select2-choice", completedWork.city, this._xhrOnCityChanged)
+            let citySelector = '#s2id_city > .select2-choice'
+            return this._selectDropdownElementWithSearchAsync(citySelector, completedWork.city, this._xhrOnCityChanged, this._xhrOnCitySelected)
         })
         .then(() => {
             console.log("city chosen")
-            return this._fillDropdownField("#s2id_street > .select2-choice", completedWork.street, this._xhrOnStreetChanged)
+            let streetSelector = '#s2id_street > .select2-choice'
+            return this._selectDropdownElementWithSearchAsync(streetSelector, completedWork.street, this._xhrOnStreetChanged, this._xhrOnStreetSelected)
         })
         .then(() => {
             console.log("street chosen")
-            return this._fillDropdownField('label[for="house"]+div > div.select2-container > .select2-choice', completedWork.house, this._xhrOnHouseChanged)
+            let houseSelector = 'label[for="house"]+div > div.select2-container > .select2-choice'
+            return this._selectDropdownElementWithSearchAsync(houseSelector, completedWork.house, this._xhrOnHouseChanged, this._xhrOnHouseSelected)
         })
         .then(() => {
             console.log("house chosen")
-        })*/
+            let dateSelector = '.select2-container.form-control.form-base__form-control.ng-pristine.ng-untouched.ng-isolate-scope.ng-empty.ng-invalid.ng-invalid-required > .select2-choice'
+            return this._selectDropdownElementAsync(dateSelector, completedWork.date)
+        })
     }
 
     _fillServicesTable(selector, services) {
@@ -301,7 +310,7 @@ class AutoFillPanel {
         }
     }
 
-    async _selectDropdownElementAsync(selector, dataToSearch, requestsOnChange, requestsOnSelect) {
+    async _selectDropdownElementWithSearchAsync(selector, dataToSearch, requestsOnChange, requestsOnSelect) {
         // promises arrays
         let onChangePromises = []
         for (let key of requestsOnChange.keys()) {
@@ -340,6 +349,47 @@ class AutoFillPanel {
         searchInput.dispatchEvent(new KeyboardEvent("keydown", {keyCode: 13}))
         await Promise.all(onSelectPromises)
         this._resetXnrDone()
+    }
+
+    async _selectDropdownElementAsync(selector, textToSearch, requestsOnSelect) {
+        // promises arrays
+        let onSelectPromises = []
+        if (requestsOnSelect) {
+            for (let key of requestsOnSelect.keys()) {
+                onSelectPromises.push(new Promise(resolve => {
+                    requestsOnSelect.set(key, resolve)
+                }))
+            }
+        }
+
+        // select element
+        let dropdownMenu = document.querySelectorAll(selector)[0]
+        let parentContainer = dropdownMenu.parentElement
+        // wait till container locked
+        while(parentContainer.classList.contains("select2-container-disabled")) {
+            await sleep(1)
+        }
+        dropdownMenu.dispatchEvent(new Event("mousedown"))
+
+        // set current callback for xnr
+        this._setXnrDone(requestsOnSelect)
+        await Promise.all(onSelectPromises)
+        this._resetXnrDone()
+
+        // select dropdown element
+        let inputEl = document.activeElement
+        let dropdownList = inputEl.parentElement.nextElementSibling
+        while(dropdownList.querySelector(".select2-no-results")) {
+            dropdownMenu.dispatchEvent(new Event("mousedown"))
+            await sleep(1)
+            dropdownMenu.dispatchEvent(new Event("mousedown"))
+        }
+        let selectedEl = dropdownList.querySelector(".select2-highlighted")
+        selectedEl.classList.remove("select2-highlighted")
+        let xpath = "//div[contains(text(),'" + textToSearch + "')]/.."
+        selectedEl = document.evaluate(xpath, dropdownList, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
+        selectedEl.classList.add("select2-highlighted")
+        inputEl.dispatchEvent(new KeyboardEvent("keydown", {keyCode: 13}))
     }
 
     _buildSidePanel() {
