@@ -19,6 +19,9 @@
     "matches": ["https://*.dom.gosuslugi.ru/*"]
   }],
   "web_accessible_resources": [
+    "content_script.js",
+    "form_autofiller_base.js",
+    "utils.js",
     "images/*.png"
   ]
 }
