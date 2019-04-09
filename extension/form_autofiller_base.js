@@ -58,6 +58,11 @@ export class FormAutofillerBase {
     }
 
     async _selectDropdownElementAsync(selector, textToSearch, requestsOnSelect) {
+        // select element
+        let dropdownMenu = document.querySelectorAll(selector)[0]
+        let parentContainer = dropdownMenu.parentElement
+        // TODO: add check if filled
+
         // promises arrays
         let onSelectPromises = []
         if (requestsOnSelect) {
@@ -68,9 +73,6 @@ export class FormAutofillerBase {
             }
         }
 
-        // select element
-        let dropdownMenu = document.querySelectorAll(selector)[0]
-        let parentContainer = dropdownMenu.parentElement
         // wait till container locked
         while(parentContainer.classList.contains("select2-container-disabled")) {
             await Utils.sleep(1)
@@ -94,6 +96,11 @@ export class FormAutofillerBase {
         selectedEl.classList.remove("select2-highlighted")
         let xpath = "//div[contains(text(),'" + textToSearch + "')]/.."
         selectedEl = document.evaluate(xpath, dropdownList, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
+        if(!selectedEl) {
+            // TODO: mark invalid field, add separate method
+            alert("В выпадающем списке не найдено требуемое поле, выберите вручную")
+            return
+        }
         selectedEl.classList.add("select2-highlighted")
         inputEl.dispatchEvent(new KeyboardEvent("keydown", {keyCode: 13}))
     }
