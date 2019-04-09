@@ -87,15 +87,9 @@ class RegisterOfListsOfWorksAndServices extends FormAutofillerBase {
     // fixation
 }
 
-class AutoFillPanel extends FormAutofillerBase {
+class RegisterOfWorksAndServices extends FormAutofillerBase {
     constructor() {
         super()
-
-        // private properties
-        this._completedServicesData = []
-        this._completedServicesList = undefined
-        this._storageName = "guafStoredData"
-        this._panel = this._buildSidePanel()
 
         // setup requests
         // each request contains API url and complete flag
@@ -147,23 +141,10 @@ class AutoFillPanel extends FormAutofillerBase {
         ])
     }
 
-    get panelElement() {
-        return this._panel
-    }
+    fill(completedWork) {
+        if (!this._isValidForm(completedWork))
+            return
 
-    onload() {
-        LocalStorage.get(this._storageName, (data) => {
-            this._updateCompletedServices(data)
-        })
-    }
-
-    unload() {
-        LocalStorage.set(this._storageName, this._completedServicesData, function() {
-            console.log("object stored")
-        })
-    }
-
-    _fillCompletedWork(completedWork) {
         let regionSelector = '#s2id_region > .select2-choice'
         this._selectDropdownElementWithSearchAsync(regionSelector, completedWork.area, this._xhrOnRegionChanged, this._xhrOnRegionSelected)
         .then(() => {
@@ -216,6 +197,92 @@ class AutoFillPanel extends FormAutofillerBase {
         }
     }
 
+    /**
+     * Check selected completed work with form filling
+     * @param {object} completedServiceObject 
+     */
+    _isValidForm(completedServiceObject) {
+        let alertMessage = "Вводимые данные не совпадают, проверьте:"
+        let isValid = true
+
+        let chosenStreet = this._searchFormStreet()
+        if (!chosenStreet || !chosenStreet.innerText.toLowerCase().includes(completedServiceObject.street.toLowerCase())) {
+            alertMessage += " улицу,"
+            isValid = false
+        }
+
+        let chosenHouse = this._searchFormHouse()
+        if (!chosenHouse || !chosenHouse.innerText.includes(completedServiceObject.house)) {
+            alertMessage += " номер здания,"
+            isValid = false
+        }
+
+        let chosenPeriod = this._searchFormPeriod()
+        if (!chosenPeriod || !chosenPeriod.innerText.includes(completedServiceObject.date)) {
+            alertMessage += " период,"
+            isValid = false
+        }
+
+        if (!isValid) {
+            let tmpCharArray = alertMessage.toCharArray()
+            tmpCharArray[alertMessage.length-1] = '.'
+            alertMessage = tmpCharArray.toString()
+            alertMessage += " Хотите продолжить?"
+            isValid = confirm(alertMessage)
+        }
+
+        return isValid
+    }
+
+    /**
+     * Forms search
+     */
+    /// @{
+    _searchFormStreet() {
+        let target = null
+        let streetChosen = document.getElementById("s2id_street")
+        if(!streetChosen)
+            return target
+
+        target = streetChosen.querySelectorAll("a.select2-choice > .select2-chosen")[0]
+        return target
+    }
+
+    _searchFormHouse() {
+        return this._searchFormByLabelText("номер здания")
+    }
+
+    _searchFormPeriod() {
+        return this._searchFormByLabelText("период")
+    }
+    /// @}
+}
+
+class AutoFillPanel {
+    constructor() {
+        // private properties
+        this._completedServicesData = []
+        this._completedServicesList = undefined
+        this._storageName = "guafStoredData"
+        this._panel = this._buildSidePanel()
+
+        //
+        LocalStorage.get(this._storageName, (data) => {
+            this._registerOfWorksAndServices = new RegisterOfWorksAndServices();
+            this._updateCompletedServices(data)
+        })
+    }
+
+    get panelElement() {
+        return this._panel
+    }
+
+    unload() {
+        LocalStorage.set(this._storageName, this._completedServicesData, function() {
+            console.log("object stored")
+        })
+    }
+
     _buildSidePanel() {
         // main panel
         let panel = document.createElement('div')
@@ -240,6 +307,7 @@ class AutoFillPanel extends FormAutofillerBase {
             this._panel.classList.toggle("guaf-hidden")
         })
         let hideBtnImage = document.createElement('img')
+        // @ts-ignore
         hideBtnImage.src = chrome.runtime.getURL("images/arrow.png")
         hideBtn.appendChild(hideBtnImage)
         sidePanel.appendChild(hideBtn)
@@ -264,6 +332,7 @@ class AutoFillPanel extends FormAutofillerBase {
         removeUsedBtn.classList.add("guaf-sidepanel--btn")
         removeUsedBtn.setAttribute("title", "Удалить использованные записи")
         let removeUsedBtnImage = document.createElement('img')
+        // @ts-ignore
         removeUsedBtnImage.src = chrome.runtime.getURL("images/trashcan-used.png")
         removeUsedBtn.appendChild(removeUsedBtnImage)
         removeUsedBtn.addEventListener("click", () => {
@@ -300,6 +369,7 @@ class AutoFillPanel extends FormAutofillerBase {
         })
         addFilesBtn.appendChild(addFilesBtnInput)
         let addFilesBtnImage = document.createElement('img')
+        // @ts-ignore
         addFilesBtnImage.src = chrome.runtime.getURL("images/plus.png")
         addFilesBtn.appendChild(addFilesBtnImage)
         addFilesBtn.addEventListener("click", () => {
@@ -369,11 +439,8 @@ class AutoFillPanel extends FormAutofillerBase {
         listItemName.innerText += " " + completedServiceObject.street
         listItemName.innerText += ", " + completedServiceObject.house
         listItemName.innerText += " от " + completedServiceObject.date
-        listItemName.addEventListener("click", ()=>{
-            if (!this._isValidForm(completedServiceObject))
-                return
-                
-            this._fillCompletedWork(completedServiceObject)
+        listItemName.addEventListener("click", ()=>{     
+            this._registerOfWorksAndServices.fill(completedServiceObject)
             completedServiceObject.used = true
             listItem.classList.add("used")
         })
@@ -383,6 +450,7 @@ class AutoFillPanel extends FormAutofillerBase {
         let listItemRemoveBtn = document.createElement('span')
         listItemRemoveBtn.classList.add("guaf-completed-services--item--remove-btn")
         let image = document.createElement('img')
+        // @ts-ignore
         image.src = chrome.runtime.getURL("images/trashcan.png")
         listItemRemoveBtn.appendChild(image)
         listItemRemoveBtn.addEventListener("click", ()=>{
@@ -401,86 +469,21 @@ class AutoFillPanel extends FormAutofillerBase {
 
         return listItem
     }
-
-    /**
-     * Check selected completed work with form filling
-     * @param {object} completedServiceObject 
-     */
-    _isValidForm(completedServiceObject) {
-        let alertMessage = "Вводимые данные не совпадают, проверьте:"
-        let isValid = true
-
-        let chosenStreet = this._searchFormStreet()
-        if (!chosenStreet || !chosenStreet.innerText.toLowerCase().includes(completedServiceObject.street.toLowerCase())) {
-            alertMessage += " улицу,"
-            isValid = false
-        }
-
-        let chosenHouse = this._searchFormHouse()
-        if (!chosenHouse || !chosenHouse.innerText.includes(completedServiceObject.house)) {
-            alertMessage += " номер здания,"
-            isValid = false
-        }
-
-        let chosenPeriod = this._searchFormPeriod()
-        if (!chosenPeriod || !chosenPeriod.innerText.includes(completedServiceObject.date)) {
-            alertMessage += " период,"
-            isValid = false
-        }
-
-        if (!isValid) {
-            let tmpCharArray = alertMessage.toCharArray()
-            tmpCharArray[alertMessage.length-1] = '.'
-            alertMessage = tmpCharArray.toString()
-            alertMessage += " Хотите продолжить?"
-            isValid = confirm(alertMessage)
-        }
-
-        return isValid
-    }
-
-    /**
-     * Forms search
-     */
-    /// @{
-    _searchFormStreet() {
-        let target = null
-        let streetChosen = document.getElementById("s2id_street")
-        if(!streetChosen)
-            return target
-
-        target = streetChosen.querySelectorAll("a.select2-choice > .select2-chosen")[0]
-        return target
-    }
-
-    _searchFormHouse() {
-        return this._searchFormByLabelText("номер здания")
-    }
-
-    _searchFormPeriod() {
-        return this._searchFormByLabelText("период")
-    }
-    /// @}
 }
 
 function main() {
     var autoFillPanel = new AutoFillPanel()
-    autoFillPanel.onload()
     document.body.appendChild(autoFillPanel.panelElement)
 
     // subscriptions
-    window.addEventListener('load', loadEvent => {
-        let window = loadEvent.currentTarget
-        window.addEventListener("angularjs_xhr_done", function(e) {
-            if (e.detail.status !== 200)
-                return
+    window.addEventListener("angularjs_xhr_done", function(e) {
+        if (e.detail.status !== 200)
+        return
 
-            console.log(e.detail.url)
-            if (autoFillPanel.xnrDone != null) {
-                autoFillPanel.xnrDone(e.detail.url)
-            }
-        })
-    
+        console.log(e.detail.url)
+    })
+
+    window.addEventListener('load', loadEvent => { 
         Utils.embed(runEmbedded)
     })
 

@@ -2,7 +2,12 @@ import { Utils } from "./utils.js"
 
 export class FormAutofillerBase {
     constructor() {
-        this.xnrDone = undefined
+        this._xnrDone = undefined
+        
+        window.addEventListener("angularjs_xhr_done", (e) => {
+            if(this._xnrDone)
+                this._xnrDone(e.detail)
+        })
     }
 
     async _selectDropdownElementWithSearchAsync(selector, dataToSearch, requestsOnChange, requestsOnSelect) {
@@ -131,14 +136,16 @@ export class FormAutofillerBase {
     _setXnrDone(requestsMap) {
         if (!requestsMap) return;
 
-        this.xnrDone = function(url) {
+        this._xnrDone = function(response) {
+            if (response.status !== 200)
+                return
+
             // parse url via a element to get pathname
             let aElement = document.createElement('a')
-            aElement.href = url
+            aElement.href = response.url
 
             if (requestsMap.has(aElement.pathname)) {
                 requestsMap.get(aElement.pathname)()
-                //requestsMap.set(aElement.pathname,true)
             }
         }
     }
