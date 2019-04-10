@@ -10,13 +10,13 @@ export class FormAutofillerBase {
         })
     }
 
-    async _selectDropdownElementWithSearchAsync(selector, dataToSearch, requestsOnChange, requestsOnSelect) {
+    async _selectDropdownElementWithSearchAsync(selector, textToSearch, requestsOnChange, requestsOnSelect) {
         // select element
         let dropdownMenu = document.querySelector(selector)
         let parentContainer = dropdownMenu.parentElement
         if (!dropdownMenu.classList.contains("select2-default")) {
             let dropdownMenuChosen = dropdownMenu.querySelector("span.select2-chosen")
-            let isSameSelected = dropdownMenuChosen.innerText.includes(dataToSearch)
+            let isSameSelected = dropdownMenuChosen.innerText.includes(textToSearch)
             if (isSameSelected) return
         }
         
@@ -45,7 +45,7 @@ export class FormAutofillerBase {
 
         // insert data
         let searchInput = document.activeElement
-        searchInput.value = dataToSearch
+        searchInput.value = textToSearch
         searchInput.dispatchEvent(new Event("input"))
         await Promise.all(onChangePromises)
 
@@ -61,7 +61,16 @@ export class FormAutofillerBase {
         // select element
         let dropdownMenu = document.querySelectorAll(selector)[0]
         let parentContainer = dropdownMenu.parentElement
-        // TODO: add check if filled
+        if (!dropdownMenu.classList.contains("select2-default")) {
+            let dropdownMenuChosen = dropdownMenu.querySelector("span.select2-chosen")
+            let isSameSelected = dropdownMenuChosen.innerText.includes(textToSearch)
+            if (isSameSelected) return
+        }
+
+        // wait till container locked
+        while(parentContainer.classList.contains("select2-container-disabled")) {
+            await Utils.sleep(1)
+        }
 
         // promises arrays
         let onSelectPromises = []
@@ -73,10 +82,6 @@ export class FormAutofillerBase {
             }
         }
 
-        // wait till container locked
-        while(parentContainer.classList.contains("select2-container-disabled")) {
-            await Utils.sleep(1)
-        }
         dropdownMenu.dispatchEvent(new Event("mousedown"))
 
         // set current callback for xnr
@@ -106,6 +111,11 @@ export class FormAutofillerBase {
     }
 
     async _submitFormSearch(selector, requestsOnSubmit) {
+        let searchBtn = document.querySelector(selector)
+        while(searchBtn.disabled) {
+            await Utils.sleep(1)
+        }
+
         // promises arrays
         let onSubmitPromises = []
         if (requestsOnSubmit) {
@@ -116,7 +126,6 @@ export class FormAutofillerBase {
             }
         }
 
-        let searchBtn = document.querySelector(selector)
         this._setXnrDone(requestsOnSubmit)
         searchBtn.click()
         await Promise.all(onSubmitPromises)
