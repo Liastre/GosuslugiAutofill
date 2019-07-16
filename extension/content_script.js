@@ -145,16 +145,16 @@ class RegisterOfWorksAndServices extends FormAutofillerBase {
         if (!this._isValidForm(completedWork))
             return
 
-        let regionSelector = '#s2id_region > .select2-choice'
+        let regionSelector = 'div[id^="s2id_region"] > .select2-choice'
         this._selectDropdownElementWithSearchAsync(regionSelector, completedWork.area, this._xhrOnRegionChanged, this._xhrOnRegionSelected)
         .then(() => {
             console.log("region chosen")
-            let citySelector = '#s2id_city > .select2-choice'
+            let citySelector = 'div[id^="s2id_city"] > .select2-choice'
             return this._selectDropdownElementWithSearchAsync(citySelector, completedWork.city, this._xhrOnCityChanged, this._xhrOnCitySelected)
         })
         .then(() => {
             console.log("city chosen")
-            let streetSelector = '#s2id_street > .select2-choice'
+            let streetSelector = 'div[id^="s2id_street"] > .select2-choice'
             return this._selectDropdownElementWithSearchAsync(streetSelector, completedWork.street, this._xhrOnStreetChanged, this._xhrOnStreetSelected)
         })
         .then(() => {
@@ -239,13 +239,7 @@ class RegisterOfWorksAndServices extends FormAutofillerBase {
      */
     /// @{
     _searchFormStreet() {
-        let target = null
-        let streetChosen = document.getElementById("s2id_street")
-        if(!streetChosen)
-            return target
-
-        target = streetChosen.querySelectorAll("a.select2-choice > .select2-chosen")[0]
-        return target
+        return document.querySelectorAll('div[id^="s2id_street"] > a.select2-choice > .select2-chosen')[0]
     }
 
     _searchFormHouse() {
