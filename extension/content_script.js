@@ -470,18 +470,22 @@ function main() {
     document.body.appendChild(autoFillPanel.panelElement)
 
     // subscriptions
-    window.addEventListener("angularjs_xhr_done", function(e) {
+    window.addEventListener("angularjs_xhr_done", e => {
         if (e.detail.status !== 200)
         return
 
         console.log(e.detail.url)
     })
 
-    window.addEventListener('load', loadEvent => { 
+    if (document.readyState == "complete") {
         Utils.embed(runEmbedded)
-    })
+    } else {
+        window.addEventListener('load', loadEvent => { 
+            Utils.embed(runEmbedded)
+        })
+    }
 
-    window.addEventListener('beforeunload', function(e) {
+    window.addEventListener('beforeunload', e => {
         autoFillPanel.unload()
     })
 }
