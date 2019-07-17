@@ -1,9 +1,52 @@
 <html>
 <head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="popup.css"/>
   <script src="popup.js"></script>
 </head>
 <body style="width: 400px">
-  Developer: Liastre
-  Contacts: <a href = "mailto: liastre@outlook.com">liastre@outlook.com</a>
+  
+  <ul class="tabs-header">
+    <li><a href="#one">Описание</a></li>
+    <li><a href="#two">Формат</a></li>
+    <li><a href="#three">3</a></li>
+    <li><a href="#four">4</a></li>
+  </ul>
+  <div class="tabs-content">
+    <ul>
+      <li id="one">Содержимое 1-й вкладки</li>
+      <li id="two">
+        {
+          "completed_work": [         // выполненные работы
+            {
+              "area": "область",      // область
+              "city": "город",        // город
+              "streetType": "ул.",    // префикс улицы, ул/пер/пр-т
+              "street": "название",   // название улицы
+              "house": "99",          // номер дома
+              "date": "01.2077",      // дата в формате ММ.ГГГГ
+              "services": [           // оказываемые услуги и выполняемые работы
+                {
+                  "name": "",         // наименование услуги
+                  "count": 0,         // количество
+                  "cost": 0           // стоимость
+                },
+                {
+                ...                  // следующая услуга
+                }
+              ]
+            }
+          ]
+        }
+      </li>
+      <li id="three">Содержимое 3-й вкладки</li>
+      <li id="four">Содержимое 4-й вкладки</li>
+    </ul>
+  </div>
+  <div class="info-box">
+    Developer: Liastre
+    Contacts: <a href = "mailto: liastre@outlook.com">liastre@outlook.com</a>
+  </div>
+
 </body>
 </html>
