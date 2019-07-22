@@ -1,52 +1,70 @@
 <html>
+  
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" type="text/css" href="popup.css"/>
   <script src="popup.js"></script>
 </head>
+
 <body style="width: 400px">
-  
-  <ul class="tabs-header">
-    <li><a href="#one">Описание</a></li>
-    <li><a href="#two">Формат</a></li>
-    <li><a href="#three">3</a></li>
-    <li><a href="#four">4</a></li>
-  </ul>
-  <div class="tabs-content">
+  <div class="head">
+    <span>Gosuslugi Autgofill</span>
+    <span id="app-version">v.9.8</span> 
+  </div>
+  <div class="tabs-header">
     <ul>
-      <li id="one">Содержимое 1-й вкладки</li>
-      <li id="two">
-        {
-          "completed_work": [         // выполненные работы
-            {
-              "area": "область",      // область
-              "city": "город",        // город
-              "streetType": "ул.",    // префикс улицы, ул/пер/пр-т
-              "street": "название",   // название улицы
-              "house": "99",          // номер дома
-              "date": "01.2077",      // дата в формате ММ.ГГГГ
-              "services": [           // оказываемые услуги и выполняемые работы
-                {
-                  "name": "",         // наименование услуги
-                  "count": 0,         // количество
-                  "cost": 0           // стоимость
-                },
-                {
-                ...                  // следующая услуга
-                }
-              ]
-            }
-          ]
-        }
+      <li>
+        <input type="radio" name="smileDivRadio" id="smileDivRadio0" value="0" class="hide" onclick="window.location.href='#one'" checked="checked">
+        <label for="smileDivRadio0" class="btn btn-default emoji-button">Описание</label>
       </li>
-      <li id="three">Содержимое 3-й вкладки</li>
-      <li id="four">Содержимое 4-й вкладки</li>
+      <li>
+        <input type="radio" name="smileDivRadio" id="smileDivRadio1" value="1" class="hide" onclick="window.location.href='#two'">
+        <label for="smileDivRadio1" class="btn btn-default emoji-button">Формат</label>
+      </li>
+      <li>
+        <input type="radio" name="smileDivRadio" id="smileDivRadio2" value="2" class="hide" onclick="window.location.href='#three'">
+        <label for="smileDivRadio2" class="btn btn-default emoji-button">Контакты</label>
+      </li>
     </ul>
   </div>
-  <div class="info-box">
-    Developer: Liastre
-    Contacts: <a href = "mailto: liastre@outlook.com">liastre@outlook.com</a>
+  <div class="tabs-container">
+    <div class="tabs-content">
+      <ul>
+        <li id="one">
+          <p>Расширение принимает на вход текстовый файл с данными в виде JSON, представление данных и все требуемые поля вы можете найти во вкладке "Формат".</p>
+          <p>JSON данные можно выгрузить практически из любой базы данных, либо средствами систем учёта типа 1С,</p>
+        </li>
+        <li id="two">
+<p class="code">{
+  "completed_work": [         // выполненные работы
+    {
+      "area": "область",      // область
+      "city": "город",        // город
+      "streetType": "ул.",    // префикс улицы, ул/пер/пр-т
+      "street": "название",   // название улицы
+      "house": "99",          // номер дома
+      "date": "01.2077",      // дата в формате ММ.ГГГГ
+      "services": [           // оказываемые услуги и выполняемые работы
+        {
+          "name": "",         // наименование услуги
+          "count": 0,         // количество
+          "cost": 0           // стоимость
+        },
+        {
+        ...                  // следующая услуга
+        }
+      ]
+    }
+  ]
+}</p>
+        </li>
+        <li id="three">
+<p>Пожелания по дополнительному функционалу, а так же жалобы на ошибки, пишите на почту.</p>
+<p>Рабочая почта: <a href = "mailto: liastre@outlook.com">liastre@outlook.com</a></p>
+        </li>
+      </ul>
+    </div>
   </div>
-
 </body>
+
 </html>
