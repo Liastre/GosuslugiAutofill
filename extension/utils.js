@@ -9,6 +9,26 @@ Array.prototype.toString = function() {
 }
 /// @}
 
+export class LocalStorage {
+    static get(storageName, completionCallback) {
+        // @ts-ignore
+        chrome.storage.local.get(storageName, (data)=>{
+            if(data && data[storageName]) {
+                completionCallback(data[storageName])
+            } else {
+                return null
+            }
+        })
+    }
+
+    static set(storageName, data, completionCallback) {
+        let resData = {}
+        resData[storageName] = data
+        // @ts-ignore
+        chrome.storage.local.set(resData, completionCallback)
+    }
+}
+
 export class Utils {
     static embed(fn) {
         const script = document.createElement("script")

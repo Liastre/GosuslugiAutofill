@@ -1,6 +1,6 @@
 //@ts-check
 import { FormAutofillerBase } from "./form_autofiller_base.js"
-import { Utils } from "./utils.js"
+import { Utils, LocalStorage } from "./utils.js"
 
 function runEmbedded() {
     // replace for open
@@ -53,26 +53,6 @@ function runEmbedded() {
         return send.apply(this, arguments)
     }
     window.XMLHttpRequest.prototype.send = sendReplacement
-}
-
-class LocalStorage {
-    static get(storageName, completionCallback) {
-        // @ts-ignore
-        chrome.storage.local.get(storageName, (data)=>{
-            if(data && data[storageName]) {
-                completionCallback(data[storageName])
-            } else {
-                return null
-            }
-        })
-    }
-
-    static set(storageName, data, completionCallback) {
-        let resData = {}
-        resData[storageName] = data
-        // @ts-ignore
-        chrome.storage.local.set(resData, completionCallback)
-    }
 }
 
 class RegisterOfListsOfWorksAndServices extends FormAutofillerBase {
