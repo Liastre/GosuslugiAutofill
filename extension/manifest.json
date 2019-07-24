@@ -3,7 +3,6 @@
   "version": "0.10.0",
   "description": "Autofills data for gosuslugi.ru from file with data",
   "permissions": [
-    "bookmarks",
     "storage"
   ],
   "browser_action": {
