@@ -17,6 +17,10 @@ ul, li, p {
     --theme-color-light1: rgb(250,250,250);
 }
 
+:root {
+    --switch-size-height: 1.7em;
+}
+
 /* Common classes */
 
 .hide {
@@ -114,3 +118,50 @@ body {
             font-size: 9pt;
         }
 
+.switch {
+    float: left;
+    margin: 0.5em;
+    margin-bottom: 1em;
+}
+    .switch > span {
+        display: block;
+        float: left;
+        line-height: var(--switch-size-height);
+    }
+    .switch > input {
+        float: left;
+        margin: 0;
+        margin-right: 0.7em;
+    }
+        .switch > input[type="checkbox"] {
+            position: relative;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            height: var(--switch-size-height);
+            width: calc( var(--switch-size-height) * 2 );
+            border-radius: var(--switch-size-height);
+            outline: none;
+            transition: background 450ms ease;
+            box-shadow: 0 0 0 3px var(--theme-color-dark1);
+        }
+        .switch > input[type="checkbox"]:before, .switch > input[type="checkbox"]:after {
+            position: absolute;
+            display: block;
+            content: "";
+            border-radius: 100%;
+            transition: background 450ms ease, -webkit-transform 450ms ease;
+            transition: background 450ms ease, transform 450ms ease;
+            transition: background 450ms ease, transform 450ms ease, -webkit-transform 450ms ease;
+        }
+        .switch > input[type="checkbox"]:before {
+            width: calc( var(--switch-size-height) * 0.7 );
+            height: calc( var(--switch-size-height) * 0.7 );
+            margin: calc( var(--switch-size-height) * 0.15 );
+            background-color: var(--theme-color-dark2);
+        }
+        .switch > input[type="checkbox"]:checked:before {
+            background-color: var(--theme-color-dark1);
+            -webkit-transform: translateX(145%);
+            transform: translateX(145%);
+        }
