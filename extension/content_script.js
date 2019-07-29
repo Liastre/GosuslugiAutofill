@@ -1,6 +1,7 @@
 //@ts-check
 import { FormAutofillerBase } from "./form_autofiller_base.js"
 import { Utils, LocalStorage } from "./utils.js"
+import { Settings } from "./settings.js"
 
 function runEmbedded() {
     // replace for open
@@ -346,9 +347,6 @@ class AutoFillPanel {
         // @ts-ignore
         addFilesBtnImage.src = chrome.runtime.getURL("images/plus.png")
         addFilesBtn.appendChild(addFilesBtnImage)
-        addFilesBtn.addEventListener("click", () => {
-
-        })
         sidePanel.appendChild(addFilesBtn)
 
         panel.appendChild(sidePanel)
@@ -468,6 +466,13 @@ function main() {
     window.addEventListener('beforeunload', e => {
         autoFillPanel.unload()
     })
+
+    chrome.runtime.onMessage.addListener(
+        (request, sender, sendResponse) => { 
+            if (request.action == Settings.EVENT)
+                console.log("settings event")
+        }
+    );
 }
 
 main()

@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" type="text/css" href="popup.css"/>
-  <script src="popup.js"></script>
 </head>
 
 <body style="width: 400px">
@@ -36,12 +35,12 @@
       <ul>
         <li id="one">
           <p>Расширение принимает на вход текстовый файл с данными в виде JSON, представление данных и все требуемые поля вы можете найти во вкладке "Формат".</p>
-          <p>JSON данные можно выгрузить практически из любой базы данных, либо средствами систем учёта типа 1С,</p>
+          <p>JSON данные можно выгрузить практически из любой базы данных, либо средствами систем учёта типа 1С.</p>
         </li>
         <li id="two">
-            <div class="switch">
+            <div class="switch" id="switchAutofillSearch">
                 <input type="checkbox"/>
-                <span>Автозаполнение полей поиска</span>
+                <span>Автозаполнение поиска</span>
             </div>
         </li>
         <li id="three">
@@ -75,6 +74,8 @@
       </ul>
     </div>
   </div>
+
+  <script src="apply_popup.js"></script>
 </body>
 
 </html>
