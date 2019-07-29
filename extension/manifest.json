@@ -21,6 +21,7 @@
     "content_script.js",
     "form_autofiller_base.js",
     "utils.js",
+    "settings.js",
     "images/*.png"
   ]
 }
