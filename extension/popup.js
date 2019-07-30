@@ -1,9 +1,12 @@
-import { Settings } from "./settings.js"
+import Settings from "./settings.js"
 
-function main() {
-    var settings = new Settings()
-
+async function main() {
     let switchAutofillSearch = document.querySelector("#switchAutofillSearch > input")
+
+    // update settings
+    let settings = await Settings.getInstance()
+    switchAutofillSearch.checked = settings.autofillSearch
+
     switchAutofillSearch.addEventListener("change", (e) => {
         settings.autofillSearch = e.target.checked
     })

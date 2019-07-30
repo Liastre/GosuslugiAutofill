@@ -1,13 +1,26 @@
 import { Utils } from "./utils.js"
+import Settings from "./settings.js"
 
 export class FormAutofillerBase {
     constructor() {
         this._xnrDone = undefined
-        
+
+        Settings.getInstance().then((settings) => {
+            this._simpleCompletion = settings.autofillSearch
+        })
+
         window.addEventListener("angularjs_xhr_done", (e) => {
             if(this._xnrDone)
                 this._xnrDone(e.detail)
         })
+        chrome.runtime.onMessage.addListener(
+            (request, sender, sendResponse) => { 
+                if (request.action != Settings.EVENT)
+                    return
+
+                this._simpleCompletion = request.settings.autofillSearch
+            }
+        )
     }
 
     async _selectDropdownElementWithSearchAsync(selector, textToSearch, requestsOnChange, requestsOnSelect) {

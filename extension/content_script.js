@@ -1,7 +1,6 @@
 //@ts-check
 import { FormAutofillerBase } from "./form_autofiller_base.js"
 import { Utils, LocalStorage } from "./utils.js"
-import { Settings } from "./settings.js"
 
 function runEmbedded() {
     // replace for open
@@ -123,41 +122,46 @@ class RegisterOfWorksAndServices extends FormAutofillerBase {
     }
 
     fill(completedWork) {
-        if (!this._isValidForm(completedWork))
-            return
-
-        let regionSelector = 'div[id^="s2id_region"] > .select2-choice'
-        this._selectDropdownElementWithSearchAsync(regionSelector, completedWork.area, this._xhrOnRegionChanged, this._xhrOnRegionSelected)
-        .then(() => {
-            console.log("region chosen")
-            let citySelector = 'div[id^="s2id_city"] > .select2-choice'
-            return this._selectDropdownElementWithSearchAsync(citySelector, completedWork.city, this._xhrOnCityChanged, this._xhrOnCitySelected)
-        })
-        .then(() => {
-            console.log("city chosen")
-            let streetSelector = 'div[id^="s2id_street"] > .select2-choice'
-            return this._selectDropdownElementWithSearchAsync(streetSelector, completedWork.street, this._xhrOnStreetChanged, this._xhrOnStreetSelected)
-        })
-        .then(() => {
-            console.log("street chosen")
-            let houseSelector = 'label[for="house"]+div > div.select2-container > .select2-choice'
-            return this._selectDropdownElementWithSearchAsync(houseSelector, completedWork.house, this._xhrOnHouseChanged, this._xhrOnHouseSelected)
-        })
-        .then(() => {
-            console.log("house chosen")
-            let dateSelector = '.form-horizontal .select2-container.form-control.form-base__form-control.ng-untouched.ng-isolate-scope > .select2-choice'
-            return this._selectDropdownElementAsync(dateSelector, completedWork.date)
-        })
-        .then(() => {
-            console.log("period chosen")
-            let searchBtnSelector = ".form-horizontal div.col-xs-8.text-right.ng-scope > button.btn.btn-prime"
-            return this._submitFormSearch(searchBtnSelector, this._xhrOnFormSearch)
-        })
-        .then(() => {
-            console.log("search submitted")
+        if (this._simpleCompletion) {
+            if (!this._isValidForm(completedWork))
+                return
+                
             let tableSelector = "#efHcsprfFrForm table.table.table-entity"
             this._fillServicesTable(tableSelector, completedWork.services)
-        })
+        } else {
+            let regionSelector = 'div[id^="s2id_region"] > .select2-choice'
+            this._selectDropdownElementWithSearchAsync(regionSelector, completedWork.area, this._xhrOnRegionChanged, this._xhrOnRegionSelected)
+            .then(() => {
+                console.log("region chosen")
+                let citySelector = 'div[id^="s2id_city"] > .select2-choice'
+                return this._selectDropdownElementWithSearchAsync(citySelector, completedWork.city, this._xhrOnCityChanged, this._xhrOnCitySelected)
+            })
+            .then(() => {
+                console.log("city chosen")
+                let streetSelector = 'div[id^="s2id_street"] > .select2-choice'
+                return this._selectDropdownElementWithSearchAsync(streetSelector, completedWork.street, this._xhrOnStreetChanged, this._xhrOnStreetSelected)
+            })
+            .then(() => {
+                console.log("street chosen")
+                let houseSelector = 'label[for="house"]+div > div.select2-container > .select2-choice'
+                return this._selectDropdownElementWithSearchAsync(houseSelector, completedWork.house, this._xhrOnHouseChanged, this._xhrOnHouseSelected)
+            })
+            .then(() => {
+                console.log("house chosen")
+                let dateSelector = '.form-horizontal .select2-container.form-control.form-base__form-control.ng-untouched.ng-isolate-scope > .select2-choice'
+                return this._selectDropdownElementAsync(dateSelector, completedWork.date)
+            })
+            .then(() => {
+                console.log("period chosen")
+                let searchBtnSelector = ".form-horizontal div.col-xs-8.text-right.ng-scope > button.btn.btn-prime"
+                return this._submitFormSearch(searchBtnSelector, this._xhrOnFormSearch)
+            })
+            .then(() => {
+                console.log("search submitted")
+                let tableSelector = "#efHcsprfFrForm table.table.table-entity"
+                this._fillServicesTable(tableSelector, completedWork.services)
+            })
+        }
     }
 
     _fillServicesTable(selector, services) {
@@ -466,13 +470,6 @@ function main() {
     window.addEventListener('beforeunload', e => {
         autoFillPanel.unload()
     })
-
-    chrome.runtime.onMessage.addListener(
-        (request, sender, sendResponse) => { 
-            if (request.action == Settings.EVENT)
-                console.log("settings event")
-        }
-    );
 }
 
 main()
