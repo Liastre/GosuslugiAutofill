@@ -114,10 +114,14 @@
     background-color: inherit;
     padding: 0.9em 0.6em;
     padding-right: 1em;
+    overflow: hidden;
 }
     .guaf-sidepanel--btn {
         cursor: pointer;
         padding-top: 0.9em;
+    }
+    .guaf-sidepanel--btn:hover {
+        transform: scaleX(1.1) scaleY(1.1);
     }
         .guaf-sidepanel--btn > img {
             max-width: 100%;
@@ -126,6 +130,7 @@
             position: absolute;
             opacity: 0;
             cursor: pointer;
+            padding-left: 5em;
         }
         .guaf-sidepanel--btn > input:hover {
             cursor: pointer;
