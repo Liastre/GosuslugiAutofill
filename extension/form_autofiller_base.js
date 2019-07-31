@@ -4,9 +4,10 @@ import Settings from "./settings.js"
 export class FormAutofillerBase {
     constructor() {
         this._xnrDone = undefined
+        this._autofillSearch = true
 
         Settings.getInstance().then((settings) => {
-            this._simpleCompletion = settings.autofillSearch
+            this._autofillSearch = settings.autofillSearch
         })
 
         window.addEventListener("angularjs_xhr_done", (e) => {
@@ -18,7 +19,7 @@ export class FormAutofillerBase {
                 if (request.action != Settings.EVENT)
                     return
 
-                this._simpleCompletion = request.settings.autofillSearch
+                this._autofillSearch = request.settings.autofillSearch
             }
         )
     }

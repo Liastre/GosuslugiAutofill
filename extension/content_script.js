@@ -122,7 +122,7 @@ class RegisterOfWorksAndServices extends FormAutofillerBase {
     }
 
     fill(completedWork) {
-        if (this._simpleCompletion) {
+        if (!this._autofillSearch) {
             if (!this._isValidForm(completedWork))
                 return
                 
