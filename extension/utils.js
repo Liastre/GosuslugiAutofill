@@ -37,12 +37,18 @@ export class Utils {
     }
     
     static similarity(str1, str2) {
+        if (str1 == null || str2 == null)
+            return 0
+
         let distance = this._levenshtein(str1, str2)
         let comparedStringLength = str1.length
         return (comparedStringLength - distance)/comparedStringLength
     }
     
     static isSimilar(str1, str2, succesPercentage) {
+        if (str1 == null || str2 == null)
+            return false
+
         let distance = this._levenshtein(str1, str2)
         let comparedStringLength = str1.length
         let resultPercentage = (comparedStringLength - distance)/comparedStringLength
