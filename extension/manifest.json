@@ -1,9 +1,13 @@
 {
   "name": "Gosuslugi Autofill",
-  "version": "0.9.6",
+  "version": "0.10.1",
   "description": "Autofills data for gosuslugi.ru from file with data",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
   "permissions": [
-    "bookmarks",
     "storage"
   ],
   "browser_action": {
@@ -19,6 +23,10 @@
     "matches": ["https://*.dom.gosuslugi.ru/*"]
   }],
   "web_accessible_resources": [
+    "content_script.js",
+    "form_autofiller_base.js",
+    "utils.js",
+    "settings.js",
     "images/*.png"
   ]
 }
