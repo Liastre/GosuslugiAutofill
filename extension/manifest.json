@@ -1,7 +1,12 @@
 {
   "name": "Gosuslugi Autofill",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "Autofills data for gosuslugi.ru from file with data",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
   "permissions": [
     "storage"
   ],
