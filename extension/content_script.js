@@ -151,7 +151,12 @@ class RegisterOfWorksAndServices extends FormAutofillerBase {
                 let dateSelector = '.form-horizontal .select2-container.form-control.form-base__form-control.ng-untouched.ng-isolate-scope > .select2-choice'
                 return this._selectDropdownElementAsync(dateSelector, completedWork.date)
             })
-            .then(() => {
+            .then((success) => {
+                if (!success) {
+                    alert("В выпадающем списке не найдено требуемое поле, выберите вручную")
+                    return
+                }
+
                 console.log("period chosen")
                 let searchBtnSelector = ".form-horizontal div.col-xs-8.text-right.ng-scope > button.btn.btn-prime"
                 return this._submitFormSearch(searchBtnSelector, this._xhrOnFormSearch)

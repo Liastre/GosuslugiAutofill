@@ -96,32 +96,42 @@ export class FormAutofillerBase {
             }
         }
 
-        dropdownMenu.dispatchEvent(new Event("mousedown"))
-
-        // set current callback for xnr
-        this._setXnrDone(requestsOnSelect)
-        await Promise.all(onSelectPromises)
-        this._resetXnrDone()
-
-        // select dropdown element
-        let inputEl = document.activeElement
-        let dropdownList = inputEl.parentElement.nextElementSibling
-        while(dropdownList.querySelector(".select2-no-results")) {
+        let inputEl = null;
+        let dropdownList = null;
+        for(let i = 0; i < 3; ++i) {
             dropdownMenu.dispatchEvent(new Event("mousedown"))
+
+            // set current callback for xnr
+            this._setXnrDone(requestsOnSelect)
+            await Promise.all(onSelectPromises)
+            this._resetXnrDone()
+
+            // select dropdown element
+            inputEl = document.activeElement
+            dropdownList = inputEl.parentElement.nextElementSibling
+
+            if(dropdownList.querySelector(".select2-highlighted"))
+                break;
+
             await Utils.sleep(1)
-            dropdownMenu.dispatchEvent(new Event("mousedown"))
         }
+
         let selectedEl = dropdownList.querySelector(".select2-highlighted")
         selectedEl.classList.remove("select2-highlighted")
         let xpath = "//div[contains(text(),'" + textToSearch + "')]/.."
         selectedEl = document.evaluate(xpath, dropdownList, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
         if(!selectedEl) {
             // TODO: mark invalid field, add separate method
-            alert("В выпадающем списке не найдено требуемое поле, выберите вручную")
-            return
+            await Utils.sleep(1)
+            // another attempt
+            let result = await this._selectDropdownElementAsync(selector, textToSearch, requestsOnSelect)
+            
+            return result
         }
         selectedEl.classList.add("select2-highlighted")
         inputEl.dispatchEvent(new KeyboardEvent("keydown", {keyCode: 13}))
+
+        return true
     }
 
     async _submitFormSearch(selector, requestsOnSubmit) {
