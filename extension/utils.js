@@ -16,7 +16,7 @@ export class LocalStorage {
             if(data && data[storageName]) {
                 completionCallback(data[storageName])
             } else {
-                return null
+                completionCallback(null)
             }
         })
     }

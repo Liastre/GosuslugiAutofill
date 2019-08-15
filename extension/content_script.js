@@ -131,23 +131,43 @@ class RegisterOfWorksAndServices extends FormAutofillerBase {
         } else {
             let regionSelector = 'div[id^="s2id_region"] > .select2-choice'
             this._selectDropdownElementWithSearchAsync(regionSelector, completedWork.area, this._xhrOnRegionChanged, this._xhrOnRegionSelected)
-            .then(() => {
-                console.log("region chosen")
+            .then((success) => {
+                if (!success) {
+                    alert("Произошла ошибка во время выбора региона")
+                    return
+                }
+
+                // region chosen
                 let citySelector = 'div[id^="s2id_city"] > .select2-choice'
                 return this._selectDropdownElementWithSearchAsync(citySelector, completedWork.city, this._xhrOnCityChanged, this._xhrOnCitySelected)
             })
-            .then(() => {
-                console.log("city chosen")
+            .then((success) => {
+                if (!success) {
+                    alert("Произошла ошибка во время выбора города")
+                    return
+                }
+
+                // city chosen
                 let streetSelector = 'div[id^="s2id_street"] > .select2-choice'
                 return this._selectDropdownElementWithSearchAsync(streetSelector, completedWork.street, this._xhrOnStreetChanged, this._xhrOnStreetSelected)
             })
-            .then(() => {
-                console.log("street chosen")
+            .then((success) => {
+                if (!success) {
+                    alert("Произошла ошибка во время выбора улицы")
+                    return
+                }
+
+                // street chosen
                 let houseSelector = 'label[for="house"]+div > div.select2-container > .select2-choice'
                 return this._selectDropdownElementWithSearchAsync(houseSelector, completedWork.house, this._xhrOnHouseChanged, this._xhrOnHouseSelected)
             })
-            .then(() => {
-                console.log("house chosen")
+            .then((success) => {
+                if (!success) {
+                    alert("Произошла ошибка во время выбора дома")
+                    return
+                }
+
+                // house chosen
                 let dateSelector = '.form-horizontal .select2-container.form-control.form-base__form-control.ng-untouched.ng-isolate-scope > .select2-choice'
                 return this._selectDropdownElementAsync(dateSelector, completedWork.date)
             })
@@ -157,12 +177,12 @@ class RegisterOfWorksAndServices extends FormAutofillerBase {
                     return
                 }
 
-                console.log("period chosen")
+                // period chosen
                 let searchBtnSelector = ".form-horizontal div.col-xs-8.text-right.ng-scope > button.btn.btn-prime"
                 return this._submitFormSearch(searchBtnSelector, this._xhrOnFormSearch)
             })
             .then(() => {
-                console.log("search submitted")
+                // search submitted
                 let tableSelector = "#efHcsprfFrForm table.table.table-entity"
                 this._fillServicesTable(tableSelector, completedWork.services)
             })

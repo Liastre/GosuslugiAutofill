@@ -27,8 +27,12 @@ export default class Settings {
     }
 
     constructor(data) {
-        if (!data)
+        if (!data) {
+            // default initialization
+            this._settings = {}
+            this._settings.autofillSearch = false
             return
+        }
 
         this._settings = data
 
@@ -44,8 +48,7 @@ export default class Settings {
     }
 
     get autofillSearch() {
-        let autofillSearch = this._settings.autofillSearch;
-        return (autofillSearch != null) ? autofillSearch : false;
+        return this._settings.autofillSearch
     }
 
     // private

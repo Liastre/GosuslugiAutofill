@@ -8,42 +8,42 @@
 <body style="width: 400px">
   <div class="head">
     <span>Gosuslugi Autgofill</span>
-    <span id="app-version">v0.10.0</span> 
+    <span id="app-version">v0.0.0</span> 
   </div>
   <div class="tabs-header">
     <ul>
       <li>
-        <input type="radio" name="tabsRadio" id="tabsRadio0" value="0" class="hide" onclick="window.location.href='#one'" checked="checked">
-        <label for="tabsRadio0" class="btn btn-default emoji-button">Описание</label>
+        <input type="radio" name="tabsRadio" value="0" class="hide" checked="checked">
+        <label class="btn btn-default btn-tab">Описание</label>
       </li>
       <li>
-        <input type="radio" name="tabsRadio" id="tabsRadio2" value="1" class="hide" onclick="window.location.href='#two'">
-        <label for="tabsRadio2" class="btn btn-default emoji-button">Настройки</label>
+        <input type="radio" name="tabsRadio" value="1" class="hide">
+        <label class="btn btn-default btn-tab">Настройки</label>
       </li>
       <li>
-        <input type="radio" name="tabsRadio" id="tabsRadio3" value="1" class="hide" onclick="window.location.href='#three'">
-        <label for="tabsRadio3" class="btn btn-default emoji-button">Формат</label>
+        <input type="radio" name="tabsRadio" value="2" class="hide">
+        <label class="btn btn-default btn-tab">Формат</label>
       </li>
       <li>
-        <input type="radio" name="tabsRadio" id="tabsRadio4" value="2" class="hide" onclick="window.location.href='#four'">
-        <label for="tabsRadio4" class="btn btn-default emoji-button">Контакты</label>
+        <input type="radio" name="tabsRadio" value="3" class="hide">
+        <label class="btn btn-default btn-tab">Контакты</label>
       </li>
     </ul>
   </div>
   <div class="tabs-container">
     <div class="tabs-content">
       <ul>
-        <li id="one">
+        <li id="tab0">
           <p>Расширение принимает на вход текстовый файл с данными в виде JSON, представление данных и все требуемые поля вы можете найти во вкладке "Формат".</p>
           <p>JSON данные можно выгрузить практически из любой базы данных, либо средствами систем учёта типа 1С.</p>
         </li>
-        <li id="two">
+        <li id="tab1">
             <div class="switch" id="switchAutofillSearch">
                 <input type="checkbox"/>
                 <span>Автозаполнение поиска</span>
             </div>
         </li>
-        <li id="three">
+        <li id="tab3">
 <p class="code">{
   "completed_work": [         // выполненные работы
     {
@@ -67,7 +67,7 @@
   ]
 }</p>
         </li>
-        <li id="four">
+        <li id="tab4">
 <p>Пожелания по дополнительному функционалу, а так же жалобы на ошибки, пишите на почту.</p>
 <p>Рабочая почта: <a href = "mailto: liastre@outlook.com">liastre@outlook.com</a></p>
         </li>
