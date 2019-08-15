@@ -48,7 +48,7 @@ export default class Settings {
     }
 
     get autofillSearch() {
-        this._settings.autofillSearch
+        return this._settings.autofillSearch
     }
 
     // private
