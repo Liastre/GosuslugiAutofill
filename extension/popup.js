@@ -15,6 +15,13 @@ async function main() {
     if(manifestData) {
         popupVersion.innerHTML = 'v' + manifestData.version
     }
+
+    document.querySelectorAll('.btn-tab').forEach((tab, index) => {
+        tab.addEventListener('click', (e)=>{
+            tab.previousElementSibling.checked = true
+            window.location.href='#tab' + index
+        })
+    })
 }
 
 main()
