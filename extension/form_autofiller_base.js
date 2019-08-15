@@ -26,12 +26,13 @@ export class FormAutofillerBase {
 
     async _selectDropdownElementWithSearchAsync(selector, textToSearch, requestsOnChange, requestsOnSelect) {
         // select element
+        textToSearch = textToSearch.toLowerCase()
         let dropdownMenu = document.querySelector(selector)
         let parentContainer = dropdownMenu.parentElement
         if (!dropdownMenu.classList.contains("select2-default")) {
             let dropdownMenuChosen = dropdownMenu.querySelector("span.select2-chosen")
-            let isSameSelected = dropdownMenuChosen.innerText.includes(textToSearch)
-            if (isSameSelected) return
+            let isSameSelected = dropdownMenuChosen.innerText.toLowerCase().includes(textToSearch)
+            if (isSameSelected) return true
         }
         
         // promises arrays
@@ -69,6 +70,8 @@ export class FormAutofillerBase {
         searchInput.dispatchEvent(new KeyboardEvent("keydown", {keyCode: 13}))
         await Promise.all(onSelectPromises)
         this._resetXnrDone()
+
+        return true
     }
 
     async _selectDropdownElementAsync(selector, textToSearch, requestsOnSelect) {
@@ -78,7 +81,7 @@ export class FormAutofillerBase {
         if (!dropdownMenu.classList.contains("select2-default")) {
             let dropdownMenuChosen = dropdownMenu.querySelector("span.select2-chosen")
             let isSameSelected = dropdownMenuChosen.innerText.includes(textToSearch)
-            if (isSameSelected) return
+            if (isSameSelected) return true
         }
 
         // wait till container locked
