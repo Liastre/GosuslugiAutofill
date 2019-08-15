@@ -8,6 +8,13 @@ async function main() {
     switchAutofillSearch.addEventListener("change", (e) => {
         settings.autofillSearch = e.target.checked
     })
+
+    // setup popup
+    let manifestData = chrome.runtime.getManifest()
+    let popupVersion = document.getElementById("app-version")
+    if(manifestData) {
+        popupVersion.innerHTML = 'v' + manifestData.version
+    }
 }
 
 main()
