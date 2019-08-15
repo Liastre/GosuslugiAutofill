@@ -99,8 +99,8 @@ export class FormAutofillerBase {
             }
         }
 
-        let inputEl = null;
-        let dropdownList = null;
+        let inputEl = null
+        let dropdownList = null
         for(let i = 0; i < 3; ++i) {
             dropdownMenu.dispatchEvent(new Event("mousedown"))
 
