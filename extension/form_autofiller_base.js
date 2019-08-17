@@ -124,12 +124,7 @@ export class FormAutofillerBase {
         let xpath = "//div[contains(text(),'" + textToSearch + "')]/.."
         selectedEl = document.evaluate(xpath, dropdownList, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
         if(!selectedEl) {
-            // TODO: mark invalid field, add separate method
-            await Utils.sleep(1)
-            // another attempt
-            let result = await this._selectDropdownElementAsync(selector, textToSearch, requestsOnSelect)
-            
-            return result
+            return false
         }
         selectedEl.classList.add("select2-highlighted")
         inputEl.dispatchEvent(new KeyboardEvent("keydown", {keyCode: 13}))

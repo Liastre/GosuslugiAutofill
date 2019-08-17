@@ -161,7 +161,7 @@ class RegisterOfWorksAndServices extends FormAutofillerBase {
                 let houseSelector = 'label[for="house"]+div > div.select2-container > .select2-choice'
                 return this._selectDropdownElementWithSearchAsync(houseSelector, completedWork.house, this._xhrOnHouseChanged, this._xhrOnHouseSelected)
             })
-            .then((success) => {
+            .then(async (success) => {
                 if (!success) {
                     alert("Произошла ошибка во время выбора дома")
                     return
@@ -169,7 +169,13 @@ class RegisterOfWorksAndServices extends FormAutofillerBase {
 
                 // house chosen
                 let dateSelector = '.form-horizontal .select2-container.form-control.form-base__form-control.ng-untouched.ng-isolate-scope > .select2-choice'
-                return this._selectDropdownElementAsync(dateSelector, completedWork.date)
+                let result = await this._selectDropdownElementAsync(dateSelector, completedWork.date)
+                if (result) {
+                    return true
+                } else {
+                    // second attempt in case of failure (sometimes field appears on second time)
+                    return this._selectDropdownElementAsync(dateSelector, completedWork.date)
+                }
             })
             .then((success) => {
                 if (!success) {
