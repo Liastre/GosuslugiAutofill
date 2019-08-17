@@ -19,11 +19,11 @@
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "content_scripts": [{
     "css": ["styles.css"],
-    "js": ["content.js"],
+    "js": ["apply_content.js"],
     "matches": ["https://*.dom.gosuslugi.ru/*"]
   }],
   "web_accessible_resources": [
-    "content_script.js",
+    "content.js",
     "form_autofiller_base.js",
     "utils.js",
     "settings.js",
