@@ -43,10 +43,12 @@ export class FormAutofillerBase {
             }))
         }
         let onSelectPromises = []
-        for (let key of requestsOnSelect.keys()) {
-            onSelectPromises.push(new Promise(resolve => {
-                requestsOnSelect.set(key, resolve)
-            }))
+        if (requestsOnSelect) {
+            for (let key of requestsOnSelect.keys()) {
+                onSelectPromises.push(new Promise(resolve => {
+                    requestsOnSelect.set(key, resolve)
+                }))
+            }
         }
 
         // wait till container locked
