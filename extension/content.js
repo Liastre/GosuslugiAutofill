@@ -130,66 +130,72 @@ class RegisterOfWorksAndServices extends FormAutofillerBase {
             this._fillServicesTable(tableSelector, completedWork.services)
         } else {
             let regionSelector = 'div[id^="s2id_region"] > .select2-choice'
+            let citySelector = 'div[id^="s2id_city"] > .select2-choice'
+            let streetSelector = 'div[id^="s2id_street"] > .select2-choice'
+            let houseSelector = 'label[for="house"]+div > div.select2-container > .select2-choice'
+            let dateSelector = '.form-horizontal .select2-container.form-control.form-base__form-control.ng-untouched.ng-isolate-scope > .select2-choice'
+            let searchBtnSelector = ".form-horizontal div.col-xs-8.text-right.ng-scope > button.btn.btn-prime"
+            let tableSelector = "#efHcsprfFrForm table.table.table-entity"
+
             this._selectDropdownElementWithSearchAsync(regionSelector, completedWork.area, this._xhrOnRegionChanged, this._xhrOnRegionSelected)
             .then((success) => {
                 if (!success) {
+                    this._markFieldAsFailed(regionSelector)
                     alert("Произошла ошибка во время выбора региона")
                     return
                 }
 
                 // region chosen
-                let citySelector = 'div[id^="s2id_city"] > .select2-choice'
                 return this._selectDropdownElementWithSearchAsync(citySelector, completedWork.city, this._xhrOnCityChanged, this._xhrOnCitySelected)
             })
             .then((success) => {
                 if (!success) {
+                    this._markFieldAsFailed(citySelector)
                     alert("Произошла ошибка во время выбора города")
                     return
                 }
 
                 // city chosen
-                let streetSelector = 'div[id^="s2id_street"] > .select2-choice'
                 return this._selectDropdownElementWithSearchAsync(streetSelector, completedWork.street, this._xhrOnStreetChanged, this._xhrOnStreetSelected)
             })
             .then((success) => {
                 if (!success) {
+                    this._markFieldAsFailed(streetSelector)
                     alert("Произошла ошибка во время выбора улицы")
                     return
                 }
 
                 // street chosen
-                let houseSelector = 'label[for="house"]+div > div.select2-container > .select2-choice'
                 return this._selectDropdownElementWithSearchAsync(houseSelector, completedWork.house, this._xhrOnHouseChanged, this._xhrOnHouseSelected)
             })
             .then(async (success) => {
                 if (!success) {
+                    this._markFieldAsFailed(houseSelector)
                     alert("Произошла ошибка во время выбора дома")
                     return
                 }
 
                 // house chosen
-                let dateSelector = '.form-horizontal .select2-container.form-control.form-base__form-control.ng-untouched.ng-isolate-scope > .select2-choice'
                 let result = await this._selectDropdownElementAsync(dateSelector, completedWork.date)
-                if (result) {
-                    return true
-                } else {
+                if (!result) {
                     // second attempt in case of failure (sometimes field appears on second time)
-                    return this._selectDropdownElementAsync(dateSelector, completedWork.date)
+                    result = await this._selectDropdownElementAsync(dateSelector, completedWork.date)
                 }
+
+                return result
             })
             .then((success) => {
                 if (!success) {
+                    this._markFieldAsFailed(dateSelector)
                     alert("В выпадающем списке не найдено требуемое поле, выберите вручную")
                     return
                 }
 
                 // period chosen
-                let searchBtnSelector = ".form-horizontal div.col-xs-8.text-right.ng-scope > button.btn.btn-prime"
                 return this._submitFormSearch(searchBtnSelector, this._xhrOnFormSearch)
             })
             .then(() => {
                 // search submitted
-                let tableSelector = "#efHcsprfFrForm table.table.table-entity"
                 this._fillServicesTable(tableSelector, completedWork.services)
             })
         }
