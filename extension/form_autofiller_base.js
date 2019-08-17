@@ -154,6 +154,17 @@ export class FormAutofillerBase {
         this._resetXnrDone()
     }
 
+    _markFieldAsFailed(selector) {
+        let element = document.querySelectorAll(selector)[0]
+        if (!element)
+            return
+
+        element.parentElement.classList.add('guaf-failed')
+        element.addEventListener('mousedown', (e) => {
+            element.parentElement.classList.remove('guaf-failed')
+        })
+    }
+
     _searchFormByLabelText(labelText) {
         let labels = document.querySelectorAll("div.form-group > label.control-label")
         let targetLabel = null

@@ -13,6 +13,10 @@
     right: -301px;
 }
 
+.guaf-failed {
+    border: 2px solid rgb(250, 17, 17) !important;
+}
+
 .guaf-btn {
     position: relative;
     float: left;
