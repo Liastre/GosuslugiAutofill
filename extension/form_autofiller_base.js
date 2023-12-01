@@ -43,10 +43,12 @@ export class FormAutofillerBase {
             }))
         }
         let onSelectPromises = []
-        for (let key of requestsOnSelect.keys()) {
-            onSelectPromises.push(new Promise(resolve => {
-                requestsOnSelect.set(key, resolve)
-            }))
+        if (requestsOnSelect) {
+            for (let key of requestsOnSelect.keys()) {
+                onSelectPromises.push(new Promise(resolve => {
+                    requestsOnSelect.set(key, resolve)
+                }))
+            }
         }
 
         // wait till container locked
@@ -124,12 +126,7 @@ export class FormAutofillerBase {
         let xpath = "//div[contains(text(),'" + textToSearch + "')]/.."
         selectedEl = document.evaluate(xpath, dropdownList, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
         if(!selectedEl) {
-            // TODO: mark invalid field, add separate method
-            await Utils.sleep(1)
-            // another attempt
-            let result = await this._selectDropdownElementAsync(selector, textToSearch, requestsOnSelect)
-            
-            return result
+            return false
         }
         selectedEl.classList.add("select2-highlighted")
         inputEl.dispatchEvent(new KeyboardEvent("keydown", {keyCode: 13}))
@@ -157,6 +154,17 @@ export class FormAutofillerBase {
         searchBtn.click()
         await Promise.all(onSubmitPromises)
         this._resetXnrDone()
+    }
+
+    _markFieldAsFailed(selector) {
+        let element = document.querySelectorAll(selector)[0]
+        if (!element)
+            return
+
+        element.parentElement.classList.add('guaf-failed')
+        element.addEventListener('mousedown', (e) => {
+            element.parentElement.classList.remove('guaf-failed')
+        })
     }
 
     _searchFormByLabelText(labelText) {
